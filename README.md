@@ -27,8 +27,6 @@ The `docker-compose.yml` contains the following services:
 -   `mysql`: MySQL 8.0
 -   `traefik`: Traefik 2.11 (For proxy)
 
-After successful building and running the containers, you can access the app using the following on http://patient.localhost.
-
 ## Setting Up Laravel
 
 Install Composer dependencies
@@ -57,3 +55,23 @@ php artisan migrate:fresh --seed
 # If using Docker:
 docker compose exec web php artisan migrate:fresh --seed
 ```
+
+Install Node dependencies
+
+```bash
+yarn install
+
+# If using Docker:
+docker compose exec web yarn install
+```
+
+Run the Vite dev server
+
+```bash
+yarn dev
+
+# If using Docker:
+docker compose exec web yarn dev
+```
+
+After successful building and running the containers, you can access the app using the following on http://patient.localhost.
