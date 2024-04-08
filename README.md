@@ -82,3 +82,13 @@ These are the credentials for logging in the Administrator user:
 
 -   Email: `admin@example.com`
 -   Password: `password`
+
+## External Database Connection
+
+To connect to the database externally, you can use these credentials:
+
+-   Host: `localhost`
+-   Port: `3307`
+-   Username: `username`
+-   Password: `password`
+-   Database Name: `patient`
