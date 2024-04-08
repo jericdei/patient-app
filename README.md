@@ -74,4 +74,11 @@ yarn dev
 docker compose exec web yarn dev
 ```
 
-After successful building and running the containers, you can access the app using the following on http://patient.localhost.
+After successful building and running the containers (if using Docker), you can access the app using the following on http://patient.localhost.
+
+## Administrator Login
+
+These are the credentials for logging in the Administrator user:
+
+-   Email: `admin@example.com`
+-   Password: `password`
