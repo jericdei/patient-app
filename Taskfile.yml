@@ -1,0 +1,11 @@
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  php: docker compose exec -u 1000 web php {{.CLI_ARGS}}
+  artisan: docker compose exec -u 1000 web php artisan {{.CLI_ARGS}}
+  composer: docker compose exec -u 1000 web composer {{.CLI_ARGS}}
+  node: docker compose exec -u 1000 web node {{.CLI_ARGS}}
+  yarn: docker compose exec -u 1000 web yarn {{.CLI_ARGS}}
+  mysql: docker compose exec -u 1000 mysql mysql -uroot -ppassword {{.CLI_ARGS}}
