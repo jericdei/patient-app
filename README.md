@@ -1,11 +1,10 @@
 # Patient App
 
-This project is from a practical examination.
+This project is from a practical examination. It's a simple CRUD app for managing patients.
 
 ## Tech Stack
 
 -   Laravel 10
--   Laravel UI
 -   Bootstrap 5
 
 ## Running Locally
