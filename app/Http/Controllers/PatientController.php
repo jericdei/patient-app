@@ -13,7 +13,11 @@ class PatientController extends Controller
      */
     public function index()
     {
-        //
+        return view('patients.index', [
+            'patients' => Patient::query()
+                ->latest()
+                ->paginate(10)
+        ]);
     }
 
     /**
@@ -21,7 +25,9 @@ class PatientController extends Controller
      */
     public function create()
     {
-        //
+        return view('patients.form', [
+            'patient' => null
+        ]);
     }
 
     /**
@@ -29,15 +35,9 @@ class PatientController extends Controller
      */
     public function store(StorePatientRequest $request)
     {
-        //
-    }
+        Patient::create($request->validated());
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Patient $patient)
-    {
-        //
+        return to_route('patients.index')->with('status', 'Patient created successfully!');
     }
 
     /**
@@ -45,7 +45,9 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient)
     {
-        //
+        return view('patients.form', [
+            'patient' => $patient
+        ]);
     }
 
     /**
@@ -53,7 +55,9 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
-        //
+        $patient->update($request->validated());
+
+        return to_route('patients.index')->with('status', 'Patient updated successfully!');
     }
 
     /**
@@ -61,6 +65,8 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        //
+        $patient->delete();
+
+        return back()->with('status', 'Patient deleted successfully!');
     }
 }
