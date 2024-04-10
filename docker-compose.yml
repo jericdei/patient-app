@@ -1,32 +1,47 @@
-name: patient
+name: laravel
 
 services:
-    web:
-        container_name: patient-web
+    app:
+        container_name: laravel-app
         build:
             context: .
             args:
+                user: ${USER:-dei} # Use any username you want for the default
                 uid: ${UID:-1000}
+        restart: unless-stopped
+        tty: true
         ports:
-            - 81:80
-            - 5174:5173
+            - 5174:5173 # Use any port you want
         environment:
-            - APACHE_RUN_USER=#1000
-            - APACHE_RUN_GROUP=#1000
-        labels:
-            - "traefik.docker.network=tinrx"
-            - "traefik.http.routers.patient-web.rule=Host(`patient.localhost`)"
+            SERVICE_NAME: app
+            SERVICE_TAGS: dev
+        working_dir: /var/www
         volumes:
-            - ./:/var/www/html
+            - ./:/var/www
         networks:
-            - tinrx
-        depends_on:
-            - mysql
+            - laravel
+
+    web:
+        image: nginx:alpine
+        container_name: laravel-web
+        restart: unless-stopped
+        tty: true
+        labels:
+            - "traefik.docker.network=laravel"
+            - "traefik.http.routers.laravel-web.rule=Host(`laravel.localhost`)"
+        ports:
+            - "81:80" # Use any port you want
+        volumes:
+            - ./:/var/www
+            - ./.docker/nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+            - laravel
+
     mysql:
         image: mysql/mysql-server:8.0
-        container_name: patient-mysql
+        container_name: laravel-mysql
         ports:
-            - 3307:3306
+            - 3307:3306 # Use any port you want
         environment:
             MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
             MYSQL_ROOT_HOST: "%"
@@ -35,14 +50,16 @@ services:
             MYSQL_PASSWORD: "${DB_PASSWORD}"
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - patient_mysql_data:/var/lib/mysql
+            - laravel_mysql_data:/var/lib/mysql
         networks:
-            - tinrx
+            - laravel
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+
     traefik:
+        container_name: laravel-traefik
         image: traefik:v2.11
         command:
             - "--api.insecure=true"
@@ -53,12 +70,12 @@ services:
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock:ro"
         networks:
-            - tinrx
+            - laravel
 
 networks:
-    tinrx:
+    laravel:
         driver: bridge
 
 volumes:
-    patient_mysql_data:
+    laravel_mysql_data:
         driver: local
